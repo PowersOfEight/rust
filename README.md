@@ -1,8 +1,8 @@
-# A repository of my jounrey into the Rust Programming language
+# A repository of my journey into the Rust Programming language
 
 
 
 ### I have EMERGED from the Bachelor's program
 
 * Time to pick up where I left off
-* Rediving into rust!!!
+* Diving back into rust!!!

@@ -1,0 +1,12 @@
+#always ignore target
+/**/target/
+
+**/*.rs.bk
+**/*.swp
+**/*.swo
+**/*.tmp
+**/*.log
+
+.vscode/
+.idea/
+*.iml

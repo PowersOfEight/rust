@@ -37,10 +37,23 @@ fn main() {
         width: 20,
         height: 60,
     };
+
+    let my_square = Rectangle::square(16);
+
+    let area_closure = |rec: &Rectangle| rec.width * rec.height;
     
     println!(
         "The area of the rectangle is {} square pixels.",
         rect1.area()
+    );
+    println!(
+        "We also have that the area is {} through closure.",
+        area_closure(&rect1)
+    );
+
+    println!(
+        "My square has a width of {}, a height of {}, and an area of {}",
+        my_square.width, my_square.height, my_square.area()
     );
 
     if rect1.width() {

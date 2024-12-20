@@ -6,6 +6,14 @@ pub struct VectorStruct {
     num: u64
 }
 
+#[derive(Debug)]
+enum SpreadSheetCell {
+    Int(i32),
+    Float(f64),
+    Text(String),
+}
+
+
 impl VectorStruct {
     pub fn create(example: String, num: u64) -> Self {
         VectorStruct {
@@ -67,5 +75,28 @@ pub fn vector_examples() {
         println!("{i}");
     }
 
-    let mut v = v;
+    // let mut v = v;
+    use SpreadSheetCell::{Int, Float, Text};
+    let row = vec![
+        Int(3),
+        Text(String::from("blue")),
+        Float(10.12),
+    ];
+
+    for cell in &row {
+        dbg!(&cell);
+        match cell {
+            Int(x) => println!("Int: {x}"),
+            Text(string) => println!("\"{string}\""),
+            Float(r) => println!("{r:.3}")
+        }
+    }
+
+    {
+        let v = vec![1,2,3,4];
+        // do stuff with v
+        for val in &v {
+            println!("{val:04}");
+        }
+    }// v is out of scope
 }

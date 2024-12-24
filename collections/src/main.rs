@@ -1,15 +1,15 @@
 mod tutorial;
 pub use crate::tutorial::{vectors, strings, hash};
-pub use crate::tutorial::exercises::stats as stats;
-use rand::Rng;
+pub use crate::tutorial::exercises::{stats as stats, pig_latin as pig_latin};
+// use rand::Rng;
 use vectors::vector_examples as vector_examples;
 use strings::*;
 use hash::hash_map_demo as hash;
 use std::vec::Vec;
 
-fn generate_random_vec(size: usize) -> Vec<i32> {
-    (0..size).map(|_| rand::thread_rng().gen_range(1..=100)).collect()
-}
+// fn generate_random_vec(size: usize) -> Vec<i32> {
+//     (0..size).map(|_| rand::thread_rng().gen_range(1..=100)).collect()
+// }
 
 mod test{
     use std::fmt::Debug;
@@ -67,6 +67,7 @@ fn main() {
     use colored::Colorize;
     use test::{TestCase, TestResult};
     use stats::{median, mode};
+    use pig_latin::{convert, split_and_convert};
     use TestResult::{Pass, Fail};
     vector_examples();
     string_demo();
@@ -133,4 +134,56 @@ fn main() {
             }
         }
     });
+
+    let latin_case = 
+        TestCase::create(
+            String::from("This is Pig Latin"),
+            String::from("his-Tay is-hay ig-Pay atin-Lay"),
+            split_and_convert.clone()
+        );
+    match latin_case.run() {
+        Pass(result) => {
+            println!("Input: {} => {}", latin_case.input, result.green())
+        },
+        Fail(_, message) => println!("{}",message) 
+    }
+
+    let latin_word =
+        TestCase::create(
+            String::from("first"),
+            Some(String::from("irst-fay")),
+            convert.clone()
+        );
+    match latin_word.run() {
+        Pass(result) => {
+            println!("Input: {} => {:?}", latin_word.input.green(), result)
+        },
+        Fail(_, message) => println!("{}", message)
+    }
+
+    let latin_vowel = 
+        TestCase::create(
+            String::from("apple"),
+            Some(String::from("apple-hay")),
+            convert.clone()
+        );
+    match latin_vowel.run() {
+        Pass(result) => {
+            println!("Input: {} => {:?}", latin_vowel.input.green(), result)
+        },
+        Fail(_, message) => println!("{}", message)
+    }
+
+    let latin_none =
+        TestCase::create(
+            String::from(""), 
+            None, 
+            convert.clone());
+    match latin_none.run() {
+        Pass(result) => {
+            println!("Input: \"{}\" => {:?}", latin_none.input.green(), result)
+        },
+        Fail(_, message) => println!("{}", message)
+    }
+
 }

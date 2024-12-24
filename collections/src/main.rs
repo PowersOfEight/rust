@@ -63,6 +63,118 @@ mod test{
 }
 
 
+mod menu{
+use crate::tutorial::exercises::departments::Company;
+use std::io::{stdin, stdout, Write};
+
+
+    fn print_border(n: usize) {
+        for _ in 0..n {
+            print!("-");
+        }
+        println!("");
+    }
+
+    fn display_menu(opts: &[&str]) {
+        print_border(80);
+        for (i, opt) in opts.iter().enumerate() {
+            println!("({i}) -> {opt}")
+        }
+        print_border(80);
+        println!("Anything else quits the program");
+        print!("Enter your choice: ");
+        stdout().flush().unwrap();
+    }
+
+    fn print_departments(company: &Company) -> () {
+        company
+            .department_employees
+            .iter()
+            .for_each(
+                |(dep,emps)| {
+                    let offset = dep.len();
+                    println!("{dep}:");
+                    emps
+                        .iter()
+                        .for_each(
+                          |emp| {
+                            println!("{:width$}|__{}", " ", emp, width=offset);
+                          }  
+                        );
+                }
+            );
+    }
+
+    fn add_employee(company: &mut Company) -> () {
+        use std::collections::hash_map::Entry;
+        use Entry::{Occupied, Vacant};
+        println!();
+        print!("Enter the name of the department: ");
+        stdout().flush().unwrap();
+        let mut buf = String::new();
+        if let Ok(_) = stdin().read_line(&mut buf) {
+            let mut name = String::new();
+            print!("Enter the name of the employee: ");
+            stdout().flush().unwrap();
+            if let Ok(_) = stdin().read_line(&mut name) {
+                buf = buf.trim().to_string();
+                name = name.trim().to_string();
+                match company.department_employees.entry(buf) {
+                    Occupied(mut occ) => {
+                        occ.get_mut().push(name);
+                    },
+                    Vacant(vac) => {
+                        vac.insert(vec![name]);
+                    }
+                }
+            } else {
+                panic!("Could not read line!");   
+            }
+        } else {
+            panic!("Could not read line!");
+        }
+    }
+
+    pub fn main() {
+        let options = [
+            "Print the departments",
+            "Add an employee to the department",
+        ];
+        let mut company = Company::new();
+        company.add("Engineering", "Sally");
+        company.add("Sales", "Amir");
+        'main: loop{
+            display_menu(&options);
+            let mut input = String::new();
+            match stdin()
+                .read_line(&mut input){
+                    Ok(_) => {
+                        match input.trim().parse::<u8>() {
+                            Ok(x) => {
+                                match x {
+                                    0 => print_departments(&company),
+                                    1 => add_employee(&mut company),
+                                    _ => {
+                                        println!("Goodbye....");
+                                        break 'main;
+                                    }
+                                }
+                            },
+                            Err(err) => {
+                                dbg!(err);
+                                break 'main;
+                            }
+                        }
+                    },
+                    Err(_) => {
+
+                        break 'main;
+                    }
+            }
+        }
+    }
+}
+
 fn main() {
     use colored::Colorize;
     use test::{TestCase, TestResult};
@@ -185,5 +297,7 @@ fn main() {
         },
         Fail(_, message) => println!("{}", message)
     }
+
+    menu::main();
 
 }

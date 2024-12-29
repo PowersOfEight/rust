@@ -1,22 +1,28 @@
-fn main() {
-    let number_list = vec![34, 50, 25, 100, 65];
+use std::cmp::PartialOrd;
 
-    let result = largest(&number_list);
-    println!("The largest number is {result}");
 
-    let number_list = vec![102, 34, 6000, 89, 54, 2, 43, 8];
-    let result = largest(&number_list);
-    println!("The largest number is {result}");
+struct Point<T> {
+    x: T,
+    y: T,
 }
 
-fn largest(list: &[i32]) -> &i32 {
-    let mut largest = &list[0];
+fn main() {
+    let list = vec![34, 50, 25, 100, 65];
+    let result = largest(&list);
+    println!("The largest number is {result}");
+    let list = vec!['y', 'm', 'a', 'q'];
+    let result = largest(&list);
+    println!("The largest char is {result}");
+}
+
+fn largest<T: PartialOrd>(list: &[T]) -> &T {
+    let mut biggest = &list[0];
 
     for n in list {
-        if n > largest {
-            largest = n;
+        if n > biggest {
+            biggest = n;
         }
     }
 
-    largest
+    biggest
 }

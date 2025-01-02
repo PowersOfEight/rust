@@ -1,9 +1,9 @@
 pub fn main() {
-    let s1 = String::from("abcd");
+    let s1 = String::from("long string is a l-o-n-g string");
     let s2 = "xyz";
 
     let result = longest(s1.as_str(), s2);
-    println!("The longest string is {result}");
+    println!("The longest string is \"{result}\"");
 }
 
 

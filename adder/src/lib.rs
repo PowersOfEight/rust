@@ -19,7 +19,14 @@ mod tests {
     use super::*;
 
     #[test]
-    #[should_panic]
+    fn test_the_logger() {}
+    #[test]
+    fn test_the_database() {}
+    #[test]
+    fn test_logger_and_database() {}
+
+    #[test]
+    #[should_panic(expected = "less than or equal to 100")]
     fn greater_than_100() {
         use guess::Guess;
         Guess::new(200);
@@ -74,8 +81,20 @@ mod tests {
     }
 
 
-    // #[test]
-    // fn another() {
-    //     panic!("Make this test fail");
-    // } 
+    #[test]
+    #[should_panic(expected = "Make this test fail")]
+    fn another() {
+        panic!("Make this test fail");
+    } 
+
+    #[test]
+    fn it_works() -> Result<(), String> {
+        let result = add(2,2);
+
+        if result == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
 }

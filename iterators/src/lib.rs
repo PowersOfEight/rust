@@ -25,4 +25,17 @@ mod tests {
 
         assert_eq!(total, 6);
     }
+
+    #[test]
+    fn iterator_adapter() {
+        let v1 = vec![1,2,3,4,5,6];
+
+        let viter = v1.iter();
+
+        let v1_plus_one: Vec<i32> = viter.map(|x| x + 1).collect();
+
+        for (i, x) in v1.iter().enumerate() {
+            assert_eq!(x + 1, v1_plus_one[i]);
+        }
+    }
 }

@@ -2,13 +2,14 @@
 //! A Library because it's a library.
 //! I'm just trying to be cool.
 //! 
-// #![deny(missing_docs)]
+use rand;
 /// Adds one to the number given
 /// and returns the result.
 /// 
 /// # Examples
 /// 
 /// ```
+/// use add_one::add_one;
 /// let input = 5;
 /// let result = add_one(input);
 /// assert_eq!(6, result);

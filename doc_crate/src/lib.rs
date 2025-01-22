@@ -6,6 +6,9 @@ mod kinds;
 
 pub use self::kinds::{PrimaryColor, SecondaryColor};
 
+// Uncommenting the following treats undocumented
+// code as an error:
+// #![deny(missing_docs)]
 
 /// Adds two numbers together.
 /// 

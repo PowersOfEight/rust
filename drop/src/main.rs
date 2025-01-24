@@ -7,14 +7,26 @@ impl Drop for CustomSmartPointer {
         println!("Dropping CustomSmartPointer with data \"{}\"!", self.data);
     }
 }
+
+fn consume<T> (_: T) {
+    println!("Consuming a value without doing anything with it.");
+}
 fn main() {
+    // let c = CustomSmartPointer {
+    //     data: String::from("my thingy"),
+    // };
+
+    // let d = CustomSmartPointer {
+    //     data: String::from("another dinghus"),
+    // };
+
+    // println!("CustomSmartPointers created.");
     let c = CustomSmartPointer {
-        data: String::from("my thingy"),
+        data: String::from("some emoji"),
     };
 
-    let d = CustomSmartPointer {
-        data: String::from("another dinghus"),
-    };
-
-    println!("CustomSmartPointers created.");
+    println!("CustomSmartPointer created.");
+    // drop(c);
+    consume(c);// c is moved here
+    println!("CustomSmartPointer dropped before the end of main.");
 }

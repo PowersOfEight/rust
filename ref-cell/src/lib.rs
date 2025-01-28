@@ -53,20 +53,20 @@ where
         }
 
 
-        impl Messenger for MockMessenger {
-            fn send(&self, message: &str) {
-                let mut first_borrow = self.sent_messages.borrow_mut();
-                let mut second_borrow = self.sent_messages.borrow_mut();
-
-                first_borrow.push(String::from(message));
-                second_borrow.push(String::from(message));
-            }
-        }
         // impl Messenger for MockMessenger {
         //     fn send(&self, message: &str) {
-        //         self.sent_messages.borrow_mut().push(String::from(message));
+        //         let mut first_borrow = self.sent_messages.borrow_mut();
+        //         let mut second_borrow = self.sent_messages.borrow_mut();
+
+        //         first_borrow.push(String::from(message));
+        //         second_borrow.push(String::from(message));
         //     }
         // }
+        impl Messenger for MockMessenger {
+            fn send(&self, message: &str) {
+                self.sent_messages.borrow_mut().push(String::from(message));
+            }
+        }
 
         #[test]
         fn it_send_an_over_75_percent_warning_message() {

@@ -15,6 +15,12 @@ fn main() {
         children: RefCell::new(vec![]),
     });
 
+    // println!( <-- this is the stopping point, listing 15-29
+    //     "leaf strong = {}, weak = {}",
+    //     Rc::strong_count(&leaf),
+    //     Rc::weak_count(&leaf),
+    // );
+
     println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
 
     let branch = Rc::new(Node {

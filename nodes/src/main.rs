@@ -9,27 +9,54 @@ struct Node {
 }
 
 fn main() {
-    let leaf = Rc::new( Node {
-        value: 3,
-        parent: RefCell::new(Weak::new()),
-        children: RefCell::new(vec![]),
-    });
+    let r1 = Rc::new(0);
+    let r4 = {
+        let r2 = Rc::clone(&r1);
+        Rc::downgrade(&r2)
+    };
 
-    // println!( <-- this is the stopping point, listing 15-29
-    //     "leaf strong = {}, weak = {}",
-    //     Rc::strong_count(&leaf),
-    //     Rc::weak_count(&leaf),
-    // );
+    let r5 = Rc::clone(&r1);
+    let r6 = r4.upgrade();
+    println!("{} {}", Rc::strong_count(&r1), Rc::weak_count(&r1));
 
-    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+//     let leaf = Rc::new( Node {
+//         value: 3,
+//         parent: RefCell::new(Weak::new()),
+//         children: RefCell::new(vec![]),
+//     });
 
-    let branch = Rc::new(Node {
-        value: 5,
-        parent: RefCell::new(Weak::new()),
-        children: RefCell::new(vec![Rc::clone(&leaf)]),
-    });
+//     println!( //<-- this is the stopping point, listing 15-29
+//         "leaf strong = {}, weak = {}",
+//         Rc::strong_count(&leaf),
+//         Rc::weak_count(&leaf),
+//     );
 
-    *leaf.parent.borrow_mut() = Rc::downgrade(&branch);
+//     // println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+// {
 
-    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+//     let branch = Rc::new(Node {
+//         value: 5,
+//         parent: RefCell::new(Weak::new()),
+//         children: RefCell::new(vec![Rc::clone(&leaf)]),
+//     });
+    
+//     *leaf.parent.borrow_mut() = Rc::downgrade(&branch);
+
+//     println!("branch strong = {}, weak = {}",
+//         Rc::strong_count(&branch),
+//         Rc::weak_count(&branch), 
+//     );
+
+//     println!("leaf strong = {}, weak = {}",
+//         Rc::strong_count(&leaf),
+//         Rc::weak_count(&leaf),
+//     );
+// }
+
+
+//     println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+//     println!("branch strong = {}, weak = {}",
+//         Rc::strong_count(&leaf),
+//         Rc::weak_count(&leaf),
+//     );
 }

@@ -3,7 +3,7 @@ fn main() {
     trpl::run(async {
         let (tx, mut rx) = trpl::channel();
 
-        let tx_fut = async {
+        let tx_fut = async move {
             let vals = vec![
                 String::from("hello"),
                 String::from("from"),

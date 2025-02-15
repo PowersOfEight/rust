@@ -1,8 +1,16 @@
+
 use std::time::Duration;
+async fn print_letters() {
+    let a = async {print!("A")};
+    let b = async {print!("B")};
+    let c = async {print!("C")};
+    c.await;
+    b.await;
+    a.await;
+}
 fn main() {
     trpl::run(async {
         let (tx, mut rx) = trpl::channel();
-
         let tx_clone = tx.clone();
         let tx_clone_fut = async move {
             let vals = vec![
@@ -36,5 +44,8 @@ fn main() {
             }
         };
         trpl::join3(tx_clone_fut, tx_fut, rx_fut).await;
+        print_letters().await;
     });
+
+
 }

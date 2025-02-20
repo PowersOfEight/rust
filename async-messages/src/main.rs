@@ -9,6 +9,22 @@ async fn print_letters() {
     b.await;
     a.await;
 }
+
+async fn go_speed_racer() {
+    let slow = async {
+        println!("\"slow\" started");
+        trpl::sleep(Duration::from_millis(100)).await;
+        println!("\"slow\" finished");
+    };
+
+    let fast = async {
+        println!("\"fast\" started");
+        trpl::sleep(Duration::from_millis(50)).await;
+        println!("\"fast\" finished");
+    };
+
+    trpl::race(slow, fast).await;
+}
 fn main() {
     trpl::run(async {
         let (tx, mut rx) = trpl::channel();
@@ -53,6 +69,7 @@ fn main() {
             ];
         trpl::join_all(futures).await;
         print_letters().await;
+        go_speed_racer().await;
     });
 
 

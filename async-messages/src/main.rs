@@ -1,6 +1,7 @@
 use std::future::Future;
 use std::{time::Duration, vec};
 use std::pin::{pin, Pin};
+use std::thread;
 async fn print_letters() {
     let a = async {print!("A")};
     let b = async {print!("B")};
@@ -8,6 +9,11 @@ async fn print_letters() {
     c.await;
     b.await;
     a.await;
+}
+
+fn slow(name: &str, millis: u64) {
+    thread::sleep(Duration::from_millis(millis));
+    println!("\"{name}\" ran for {millis}ms");
 }
 
 async fn go_speed_racer() {
@@ -25,6 +31,30 @@ async fn go_speed_racer() {
 
     trpl::race(slow, fast).await;
 }
+
+async fn slow_simulation() {
+    let a = async {
+        println!("\"a\" started.");
+        slow("a", 30);
+        slow("a", 10);
+        slow("a", 20);
+        trpl::sleep(Duration::from_millis(50)).await;
+        println!("\"a\" finished.");
+    };
+
+    let b = async {
+        println!("\"b\" started.");
+        slow("b", 75);
+        slow("b", 10);
+        slow("b", 15);
+        slow("b", 350);
+        trpl::sleep(Duration::from_millis(50)).await;
+        println!("\"b\" finished.");
+    };
+
+    trpl::race(a,b).await;
+}
+
 fn main() {
     trpl::run(async {
         let (tx, mut rx) = trpl::channel();
@@ -70,6 +100,7 @@ fn main() {
         trpl::join_all(futures).await;
         print_letters().await;
         go_speed_racer().await;
+        slow_simulation().await;
     });
 
 

@@ -82,6 +82,26 @@ async fn fake_benchmark() {
     let time = Instant::now() - start;
     println!("\"yield\" version finished after {} seconds.", time.as_secs_f32());
 }
+
+
+async fn timeout<F: Future>(future: F, max_time: Duration) -> Result<F::Output, Duration>{
+    match trpl::race(future, trpl::sleep(max_time)).await {
+        trpl::Either::Left(output) => Ok(output),
+        trpl::Either::Right(_) => Err(max_time),
+    }
+}
+
+async fn timeout_example() {
+    let slow = async {
+        trpl::sleep(Duration::from_secs(5)).await;
+        "Finally finished"
+    };
+
+    match timeout(slow, Duration::from_secs(2)).await {
+        Ok(message) => println!("Succeeded with \"{message}\""),
+        Err(duration) => println!("Operation timed out after {} seconds", duration.as_secs()),
+    }
+}
 fn main() {
     trpl::run(async {
         let (tx, mut rx) = trpl::channel();
@@ -129,6 +149,7 @@ fn main() {
         go_speed_racer().await;
         slow_simulation().await;
         fake_benchmark().await;
+        timeout_example().await;
     });
 
 

@@ -33,11 +33,15 @@ async fn go_speed_racer() {
 }
 
 async fn slow_simulation() {
+    let one_ms = Duration::from_millis(1);
     let a = async {
         println!("\"a\" started.");
         slow("a", 30);
+        trpl::sleep(one_ms).await;
         slow("a", 10);
+        trpl::sleep(one_ms).await;
         slow("a", 20);
+        trpl::sleep(one_ms).await;
         trpl::sleep(Duration::from_millis(50)).await;
         println!("\"a\" finished.");
     };
@@ -45,8 +49,11 @@ async fn slow_simulation() {
     let b = async {
         println!("\"b\" started.");
         slow("b", 75);
+        trpl::sleep(one_ms).await;
         slow("b", 10);
+        trpl::sleep(one_ms).await;
         slow("b", 15);
+        trpl::sleep(one_ms).await;
         slow("b", 350);
         trpl::sleep(Duration::from_millis(50)).await;
         println!("\"b\" finished.");

@@ -1,5 +1,5 @@
 use std::future::Future;
-use std::{time::Duration, vec};
+use std::{time::{Duration, Instant}, vec};
 use std::pin::{pin, Pin};
 use std::thread;
 async fn print_letters() {
@@ -33,35 +33,55 @@ async fn go_speed_racer() {
 }
 
 async fn slow_simulation() {
-    let one_ms = Duration::from_millis(1);
     let a = async {
         println!("\"a\" started.");
         slow("a", 30);
-        trpl::sleep(one_ms).await;
+        trpl::yield_now().await;
         slow("a", 10);
-        trpl::sleep(one_ms).await;
+        trpl::yield_now().await;
         slow("a", 20);
-        trpl::sleep(one_ms).await;
-        trpl::sleep(Duration::from_millis(50)).await;
+        trpl::yield_now().await;
         println!("\"a\" finished.");
     };
 
     let b = async {
         println!("\"b\" started.");
         slow("b", 75);
-        trpl::sleep(one_ms).await;
+        trpl::yield_now().await;
         slow("b", 10);
-        trpl::sleep(one_ms).await;
+        trpl::yield_now().await;
         slow("b", 15);
-        trpl::sleep(one_ms).await;
+        trpl::yield_now().await;
         slow("b", 350);
-        trpl::sleep(Duration::from_millis(50)).await;
+        trpl::yield_now().await;
         println!("\"b\" finished.");
     };
 
     trpl::race(a,b).await;
 }
 
+async fn fake_benchmark() {
+    let one_ns = Duration::from_nanos(1);
+    let start = Instant::now();
+    async {
+        for _ in 1..1000 {
+            trpl::sleep(one_ns).await;
+        }
+    }
+    .await;
+    let time = Instant::now() - start;
+    println!("\"sleep\" version finished after {} seconds", time.as_secs_f32());
+
+    let start = Instant::now();
+    async {
+        for _ in 1..1000 {
+            trpl::yield_now().await;
+        }
+    }
+    .await;
+    let time = Instant::now() - start;
+    println!("\"yield\" version finished after {} seconds.", time.as_secs_f32());
+}
 fn main() {
     trpl::run(async {
         let (tx, mut rx) = trpl::channel();
@@ -108,6 +128,7 @@ fn main() {
         print_letters().await;
         go_speed_racer().await;
         slow_simulation().await;
+        fake_benchmark().await;
     });
 
 

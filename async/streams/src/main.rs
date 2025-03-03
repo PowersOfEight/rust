@@ -1,6 +1,6 @@
 extern crate trpl;
 
-use trpl::StreamExt;
+use trpl::{ReceiverStream, Stream, StreamExt};
 
 async fn stream_example_one() {
     let values = (1..11).into_iter().collect::<Vec<i32>>();
@@ -27,9 +27,31 @@ async fn stream_example_two() {
         println!("The value was: {x}");
     }
 }
+
+async fn stream_example_three() {
+    let mut stream = get_messages();
+
+    while let Some(message) = stream.next().await {
+        println!("{message}");
+    }
+}
+
+fn get_messages() -> impl Stream<Item = String> {
+    let (tx, rx) = trpl::channel();
+
+   (0..10).into_iter().map(|x| {
+        ('a' as u8 + x) as char
+    }).for_each(|message| {
+        tx.send(format!("Message: '{message}'")).unwrap();
+    });
+
+
+    ReceiverStream::new(rx)
+}
 fn main() {
     trpl::run(async {
         stream_example_one().await;
         stream_example_two().await;
+        stream_example_three().await;
     });
 }

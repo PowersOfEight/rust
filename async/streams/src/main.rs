@@ -1,6 +1,6 @@
 extern crate trpl;
 
-use std::{pin::{Pin, pin}, time::Duration};
+use std::{pin::pin, time::Duration};
 use trpl::{ReceiverStream, Stream, StreamExt};
 
 async fn stream_example_one() {
@@ -46,12 +46,31 @@ fn get_messages() -> impl Stream<Item = String> {
             .enumerate() {
                 let time_to_sleep = if index & 1 == 0 { 100 } else { 300 };
                 trpl::sleep(Duration::from_millis(time_to_sleep)).await;
-                tx.send(format!("Message: {message}")).unwrap();
+                if let Err(send_error) = tx.send(format!("Message: {message}")) {
+                    eprintln!("Cannot send message '{message}': {send_error}");
+                    break;
+                }
             }
 
     });
 
+    ReceiverStream::new(rx)
+}
 
+fn get_intervals() -> impl Stream<Item = i32> {
+    let (tx, rx) = trpl::channel();
+
+    trpl::spawn_task( async move {
+        let mut count = 0;
+        loop {
+            trpl::sleep(Duration::from_millis(1)).await;
+            count += 1;
+            if let Err(send_err) = tx.send(count){
+                eprintln!("Cannot send interval {count}: {send_err}");
+                break;
+            }
+        }
+    });
     ReceiverStream::new(rx)
 }
 
@@ -62,7 +81,7 @@ async fn stream_example_four() -> () {
         while let Some(result) = messages.next().await {
             match result {
                 Ok(message) => println!("{message}"),
-                Err(reason) => println!("Problem: {reason}"),
+                Err(reason) => println!("Problem: {reason:?}"),
             }
         }
 }
@@ -75,5 +94,18 @@ fn main() {
         stream_example_two().await;
         stream_example_three().await;
         stream_example_four().await;
+        let messages = get_messages().timeout(Duration::from_millis(200));
+        let intervals = get_intervals()
+            .map(|x| format!("Interval: #{x}"))
+            .throttle(Duration::from_millis(100))
+            .timeout(Duration::from_secs(10));
+        let merged = messages.merge(intervals).take(20);
+        let mut stream = pin!(merged);
+        while let Some(message) = stream.next().await {
+            match message {
+                Ok(value) => println!("{value}"),
+                Err(reason) => println!("Problem: {reason:?}"),
+            }
+        }
     });
 }

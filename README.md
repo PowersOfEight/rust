@@ -29,3 +29,7 @@
     }
   }
   ```
+
+  ### Branch `organization`
+
+  * Taking a little detour.  The goal of this branch is to create a command line program that has a library for its model.

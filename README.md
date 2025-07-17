@@ -17,3 +17,15 @@
 
 * Currently working on 18.2
   * _Using Trait Objects That Allow for Values of Different Types_
+  * Getting used to the whole 
+  ```rust
+  pub trait Trait {
+    pub fn foo(&self);
+  };
+
+  pub impl Trait for Struct {
+    pub fn foo(&self) {
+      // Do things in here 
+    }
+  }
+  ```

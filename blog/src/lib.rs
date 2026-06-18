@@ -1,3 +1,4 @@
+pub mod foo;
 pub struct Post {
     state: Option<Box<dyn State>>,
     content: String,
@@ -78,5 +79,16 @@ impl State for Published {
 
     fn content<'a>(&self, post: &'a Post) -> &'a str {
         &post.content
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::foo::bar::Baz;
+
+    #[test]
+    fn create_baz() {
+        let baz = Baz::default();
+        assert_eq!(None, baz.get_ref());
     }
 }

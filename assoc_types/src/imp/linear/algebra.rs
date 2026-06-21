@@ -6,6 +6,16 @@ pub struct Point {
     pub y: i32,
 }
 
+impl std::fmt::Display for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
+}
+
+use crate::imp::display::border::OutlinePrint;
+
+impl OutlinePrint for Point {}
+
 /*
 * If one wants to see what kind ofshenigans one can get into wth default type parameters, read the
 * hover description for the Add operator (which overloads the + operator for custom type)

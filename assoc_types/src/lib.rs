@@ -16,6 +16,7 @@ mod tests {
     use super::*;
     use crate::imp::counter::Counter;
     use crate::imp::disambiguator::{Animal, Dog, Human, Pilot, Wizard};
+    use crate::imp::display::border::OutlinePrint;
     use crate::imp::linear::algebra::Point;
 
     #[test]
@@ -63,5 +64,11 @@ mod tests {
     #[test]
     fn test_no_ref_disambiguation() {
         println!("A baby dog is called a {}", <Dog as Animal>::baby_name());
+    }
+
+    #[test]
+    fn test_display_works_on_point() {
+        let my_point = Point { x: 7, y: 11 };
+        my_point.outline_print();
     }
 }

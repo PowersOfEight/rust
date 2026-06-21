@@ -15,6 +15,7 @@ impl Iterator for Counter {
 mod tests {
     use super::*;
     use crate::imp::counter::Counter;
+    use crate::imp::disambiguator::{Animal, Dog, Human, Pilot, Wizard};
     use crate::imp::linear::algebra::Point;
 
     #[test]
@@ -46,5 +47,21 @@ mod tests {
             Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
             Point { x: 3, y: 3 }
         );
+    }
+
+    #[test]
+    fn test_disambiguation() {
+        let person = Human;
+        Pilot::fly(&person);
+        Wizard::fly(&person);
+        person.fly();
+    }
+
+    // In general, it works like this
+    // <Type as Trait>::function_name(receiver_if_method, next_arg, ...);
+
+    #[test]
+    fn test_no_ref_disambiguation() {
+        println!("A baby dog is called a {}", <Dog as Animal>::baby_name());
     }
 }

@@ -7,6 +7,10 @@ impl Counter {
         Self { value: 0 }
     }
 
+    pub fn starting_at(s: u32) -> Self {
+        Self { value: s }
+    }
+
     pub fn increment(&mut self, inc: u32) {
         self.value += inc;
     }
@@ -15,5 +19,9 @@ impl Counter {
         let output = self.value;
         self.value += 1;
         output
+    }
+
+    pub fn get(&self) -> u32 {
+        self.value
     }
 }

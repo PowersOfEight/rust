@@ -11,12 +11,32 @@ impl Iterator for Counter {
         Some(self.val())
     }
 }
+
+mod inner {
+    pub trait A {
+        fn f(&self) -> usize {
+            0
+        }
+    }
+
+    pub trait B {
+        fn f(&self) -> usize {
+            1
+        }
+    }
+
+    pub struct P;
+    impl A for P {}
+    impl B for P {}
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::imp::counter::Counter;
     use crate::imp::disambiguator::{Animal, Dog, Human, Pilot, Wizard};
     use crate::imp::display::border::OutlinePrint;
+    use crate::imp::display::newtype::Wrapper;
     use crate::imp::linear::algebra::Point;
 
     #[test]
@@ -70,5 +90,28 @@ mod tests {
     fn test_display_works_on_point() {
         let my_point = Point { x: 7, y: 11 };
         my_point.outline_print();
+    }
+
+    #[test]
+    fn test_newtype_wrapper() {
+        let wrapper = Wrapper(vec![
+            String::from("foo"),
+            String::from("bar"),
+            String::from("baz"),
+        ]);
+
+        assert_eq!("[foo, bar, baz]", wrapper.to_string());
+    }
+
+    #[test]
+    fn default_wrapper() {
+        let w = Wrapper(vec![String::from("hello"), String::from("world")]);
+        println!("w = {w}");
+    }
+
+    #[test]
+    fn quiz_3() {
+        use crate::inner::{B, P};
+        println!("{}", P.f());
     }
 }
